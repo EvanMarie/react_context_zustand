@@ -1,0 +1,43 @@
+html, body {
+  font-family: monospace !important;
+  padding: 20px;
+  background-color: #333333 !important;
+}
+
+.small_container {
+  width: 100%;
+  background-color: #222222;
+  color: white;
+  max-width: 600px;
+  margin: 10px auto;
+  padding: 15px 15px;
+  font-size: 18px;
+  border-radius: 10px;
+
+}
+
+h3, h2 {
+  color: cyan;
+}
+
+h4 {
+  color: lightgray !important;
+  font-size: 15px !important;
+}
+
+button {
+  background-color: cyan !important;
+  color: black !important;
+  margin: 5px !important;
+  font-size: 15px !important;
+  width: 125px;
+}
+
+input {
+  margin: 5px 5px !important;
+}
+
+hr {
+  border: 1px solid cyan !important;
+  opacity: 0.9;
+}

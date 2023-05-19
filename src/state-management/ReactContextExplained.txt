@@ -1,0 +1,237 @@
+/* 
+React Context is a feature in React that allows you to pass data through the 
+component tree without having to pass it down manually through props at every 
+level. It's particularly useful when you need to share global data or state, 
+like a user's authentication status, theme settings, or a global store. Here 
+are the main aspects of React Context:
+
+Creating a Context:
+To create a context, you use the React.createContext function. It returns 
+a Context object with two main components: Provider and Consumer (or 
+useContext hook). 
+*/
+
+const MyContext = React.createContext();
+
+/*
+Context Provider:
+The Provider is a component that wraps the part of your component tree that 
+needs access to the context data. It accepts a prop called value, which is the 
+data you want to pass to the components in the tree.
+*/
+
+<MyContext.Provider value={someData}>
+  {/* Your component tree that needs access to the context data */}
+</MyContext.Provider>;
+
+/* 
+Accessing Context Data:
+There are two main ways to access the data provided by a context:
+
+Context Consumer: This is a component that can be used to access the context 
+value directly within the render method. It accepts a function as a child, 
+and that function receives the context value as an argument.
+*/
+
+<MyContext.Consumer>
+  {(contextValue) => {
+    // You can use the contextValue in your JSX here
+  }}
+</MyContext.Consumer>;
+
+/* 
+useContext Hook: In functional components, you can use the useContext hook to 
+access the context value. This hook accepts the context object as an argument 
+and returns the current context value.
+*/
+
+import { useContext } from "react";
+
+function MyComponent() {
+  const contextValue = useContext(MyContext);
+  // You can use the contextValue in your JSX or logic here
+}
+
+/*
+Updating Context Data:
+To update the context data, you can either change the value passed to the 
+Provider or, more commonly, use a combination of context and state management 
+techniques, like using the context to provide a state and a dispatch function 
+(similar to how the useReducer hook works). 
+
+****************************************************************************************
+WHEN TO and WHEN NOT TO USE REACT CONTEXT:
+
+* CLIENT STATE: the data that represents the state of the client / UI, i.e. current
+  user, selected theme, etc.
+  - For managing client state, local state can be saved in a component with useState or
+    useReducer (for more complicated state management), and React Context can be used 
+    to share it with the child component.
+  - This often involves lifting the state up to a parent component so it can be 
+    shared with its children
+
+* SERVER STATE: the data fetched from the backend
+  - not a good place to use React Context, which would complicate the component
+    tree very quickly.
+  - React Query is a better choice here.
+
+- Contexts should have a single responsibility and be split up to minimize re-rendering
+- State Management Libraries: Redux, MobX, Recoil, xState, Zustand, etc. (Zustand is
+  simplest and works for most applications.)
+
+****************************************************************************************
+CHATGPT EXPLAINS WHEN TO AND NOT TO USE REACT CONTEXT:
+
+React Context is a built-in state management feature in React that helps pass data down 
+the component tree without having to pass props manually at every level. The context 
+system can be a great tool to manage state, but it's not always the right tool for every 
+job.
+
+* Here are some scenarios where you may want to use React Context:
+
+    - Prop Drilling: If you're experiencing a problem with "prop drilling", where props 
+      need to be passed through multiple components before reaching the one that actually 
+      uses the prop, then React Context can be a good solution. It enables you to share 
+      value or state to the components that need it without going through intermediates. 
+      This keeps your code cleaner and easier to manage.
+
+    - Shared State: When you have global state that multiple components or component 
+      trees need access to. For example, if you have user authentication information 
+      that many components need to access, React Context is a good tool to use.
+
+    - Theme Management: If you are changing the look and feel of your application and 
+      the changes need to be reflected across multiple components, React Context is a 
+      great choice. You can store the current theme in the context and use it throughout 
+      the application.
+
+* However, there are also scenarios where React Context may not be the best choice:
+
+    - High-frequency Updates: If your state changes very frequently (like the position 
+      of a cursor in a drawing app), using context can cause unnecessary re-renders and 
+      negatively impact performance. In this case, you might want to explore other 
+      alternatives like storing the state locally or using other state management 
+      libraries optimized for frequent updates.
+
+    - Very Large Applications: In large-scale applications with complex state 
+      management needs, Redux or MobX might be better suited because they provide more 
+      robust solutions for managing state with middlewares, and they have better tools 
+      for debugging state changes.
+
+    - Small, isolated state: If a piece of state only affects one or a small number 
+      of components, using local component state with useState or useReducer would be 
+      a more straightforward choice. Using context in this case would be an overkill 
+      and may make the component harder to understand and reuse.
+
+    - Very Local or Temporary States: Things like form input values, hover states, 
+      or toggled visibility are typically best kept in local component state. They're 
+      not usually beneficial to other parts of the app, so there's no need to use context.
+
+* Remember that Context is just a tool, and like any tool, its efficacy depends on the 
+  situation. It can sometimes be the perfect solution, but other times there may be better 
+  options available. When you're considering whether to use Context, it can help to think 
+  about what problem you're trying to solve and whether Context is the best tool for that 
+  specific problem.
+
+****************************************************************************************
+CHAT GPT EXPLAINS REDUX:
+
+* Redux is a predictable state container for JavaScript applications. It was designed 
+  to help you manage global state in an application, particularly when dealing with 
+  complex flows of data and intricate UIs. Redux was inspired by Facebook's Flux 
+  architecture and influenced by functional programming concepts, especially the 
+  Elm architecture.
+
+ ** FLUX is an application architecture for building client-side web applications. 
+    It was developed by Facebook to complement React's components by utilizing a 
+    unidirectional data flow. It's more of a pattern rather than a formal framework, 
+    and you can use it immediately with React in your applications.
+
+    Flux is comprised of a few parts: Actions, Dispatcher, Stores, and Views (React 
+    components). The flow of data in Flux is as follows:
+    * Actions: User interactions in the view cause dispatches of actions (simple objects 
+      containing the new data and type of action).
+    * Dispatcher: Acts as a central hub where callbacks are registered. Each store 
+      registers itself and provides a callback.
+    * Stores: They contain the application's state and logic. Whenever an action is 
+      dispatched, the store's callback is invoked, and depending on the action type, 
+      it will execute some logic and update the state.
+    * Views: React components grab the state from the Stores and re-render. They also 
+      pass down callback functions to the child components to propagate new actions.
+
+    The dispatcher, stores, and views are independent nodes with distinct inputs and 
+    outputs, and actions flowing in a single direction, which keeps the system easier 
+    to reason about.
+
+ ** ELM is a functional language that compiles to JavaScript, and it's known for its 
+    strong type safety and friendly error messages. It was designed to build reliable, 
+    robust, and efficient web applications.
+
+    Elm enforces a simple, yet strict architecture pattern called The Elm Architecture 
+    (TEA), comprising three fundamental parts:
+
+      * Model: The state of your application.
+      * Update: A function to update your state with some new data. This function is 
+        pure, meaning given the same input, it will always return the same output without 
+        producing any side effects.
+      * View: A function to render HTML based on the state.
+
+    These three parts are wired together in a cyclical pattern: user interaction in the 
+    View generates a command for the Update, the Update function processes commands and 
+    updates the Model, and the changed Model triggers a re-render of the View.
+
+    Elm is commonly praised for its performance and simplicity, as well as for its 
+    innovative features like time-traveling debugger, where developers can go back and 
+    forth in their code to inspect their app at different points in time. It has 
+    influenced JavaScript frameworks like Redux and has been used as an alternative to 
+    JavaScript for building web frontends.
+
+
+* Redux is most often used with libraries like React and Angular, but it can be used 
+  with any view library. It is tiny (about 2KB) and has no dependencies.
+
+* Here's a brief overview of some key concepts in Redux:
+
+    - Store: The Redux store is a JavaScript object that holds the global state of 
+      the application. It is the single source of truth for state within your 
+      application.
+
+    - Actions: Actions are plain JavaScript objects that represent what happened 
+      in the app. They are the only way you can send data (payload) to the Redux store.
+      Every action must have a type field which tells what kind of action it is.
+
+    - Reducers: Reducers are pure functions that take the current state of the 
+      application and an action, then return a new state. They describe how the 
+      application's state changes in response to actions sent to the store.
+
+* The primary use case for Redux is managing complex state interactions that are hard 
+  to express with React’s component state. It is also handy when you are dealing with 
+  shared state that needs to be accessed by multiple components.
+
+* Here's when you might want to use Redux:
+
+    - Complex state interactions: If you have actions that have side effects or are 
+      asynchronous (like network requests), or if multiple places need to respond to 
+      the same action, Redux can be a good choice.
+
+    - Shared, global state: If you have state that needs to be shared amongst many 
+      components, or different parts of the state tree that need to be related, Redux 
+      can provide a central store for all of this state.
+
+    - Performance with many components: If you have a high number of components that 
+      need to be aware of state, Redux can help optimize performance by avoiding the 
+      need for prop drilling and unnecessary component re-renders.
+
+    - Developer tooling and middleware: Redux has great developer tools that allow 
+      you to track when, where, why, and how your application’s state changed. Redux’s 
+      middleware also allows you to write async logic that interacts with the store.
+
+* On the other hand, for smaller applications, or applications with a simple state, 
+  Redux might be overkill and could add unnecessary complexity to your app. For such 
+  applications, using local component state or React's Context API might be a better 
+  choice.
+
+* As with any tool, it's important to consider the trade-offs and choose the best 
+  tool for your specific needs.
+
+
+*/
